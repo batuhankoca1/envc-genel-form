@@ -19,6 +19,7 @@
       --primary2:#7a7bff;
       --danger:#ff5b6a;
     }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -488,44 +489,27 @@
       };
     }
 
-   async function submit(){
-  nextBtn.disabled = true;
-  backBtn.disabled = true;
-  showToast("Gönderiliyor...", "ok");
+    async function submit(){
+      nextBtn.disabled = true;
+      backBtn.disabled = true;
+      showToast("Gönderiliyor...", "ok");
 
-  try {
-    const p = payload();
+      try{
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify(payload()),
+        });
 
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = SCRIPT_URL;
-    form.target = "hidden_iframe";
+        showToast("Başvurun alındı 🎉\n\nENVC Genel WhatsApp grubuna katılmak için yönlendiriliyorsun.", "ok");
 
-    for (const [k, v] of Object.entries(p)) {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = k;
-      input.value = Array.isArray(v) ? v.join(", ") : String(v ?? "");
-      form.appendChild(input);
-    }
+        setTimeout(() => {
+          window.location.href = WA_LINK;
+        }, 3000);
 
-    document.body.appendChild(form);
-    form.submit();
-    form.remove();
-
-    showToast("Başvurun alındı 🎉\n\nENVC Genel WhatsApp grubuna katılmak için yönlendiriliyorsun.", "ok");
-
-    setTimeout(() => {
-      window.location.href = WA_LINK;
-    }, 3000);
-
-    nextBtn.textContent = "Gönderildi";
-  } catch (e) {
-    showToast("Gönderim başarısız. (JS error)", "bad");
-    nextBtn.disabled = false;
-    backBtn.disabled = false;
-  }
-}catch(e){
+        nextBtn.textContent = "Gönderildi";
+      }catch(e){
         showToast("Gönderim başarısız. Script deploy erişimini (Anyone) kontrol et.", "bad");
         nextBtn.disabled = false;
         backBtn.disabled = false;
@@ -540,20 +524,20 @@
     };
 
     nextBtn.onclick = async () => {
-  hideToast();
-  clearErrors();
+      hideToast();
+      clearErrors();
 
-  if (step === 1) {
-    if (!v1()) return;
-    step = 2;
-    showStep();
-    return;
-  }
+      if (step === 1 && !v1()) return;
+      if (step === 2 && !v2()) return;
 
-  // step === 2
-  if (!v2()) return;
-  await submit();
-};
+      if (step < 2){
+        step += 1;
+        showStep();
+        return;
+      }
+
+      await submit();
+    };
 
     // init
     renderChips("chips_what", SELECT.what, picked.what);
@@ -562,6 +546,5 @@
     schoolToggle();
     showStep();
   </script>
-  <iframe name="hidden_iframe" style="display:none;"></iframe>
 </body>
 </html>
