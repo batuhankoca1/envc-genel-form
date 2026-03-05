@@ -488,44 +488,44 @@
       };
     }
 
-   function submit(){
+   async function submit(){
   nextBtn.disabled = true;
   backBtn.disabled = true;
   showToast("Gönderiliyor...", "ok");
 
-  // payload objesi
-  const p = payload();
+  try {
+    const p = payload();
 
-  // hidden form yarat
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = SCRIPT_URL;
-  form.target = "hidden_iframe";
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = SCRIPT_URL;
+    form.target = "hidden_iframe";
 
-  // objeyi inputlara çevir
-  for (const [k, v] of Object.entries(p)) {
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = k;
+    for (const [k, v] of Object.entries(p)) {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = k;
+      input.value = Array.isArray(v) ? v.join(", ") : String(v ?? "");
+      form.appendChild(input);
+    }
 
-    if (Array.isArray(v)) input.value = v.join(", ");
-    else input.value = String(v ?? "");
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
 
-    form.appendChild(input);
+    showToast("Başvurun alındı 🎉\n\nENVC Genel WhatsApp grubuna katılmak için yönlendiriliyorsun.", "ok");
+
+    setTimeout(() => {
+      window.location.href = WA_LINK;
+    }, 3000);
+
+    nextBtn.textContent = "Gönderildi";
+  } catch (e) {
+    showToast("Gönderim başarısız. (JS error)", "bad");
+    nextBtn.disabled = false;
+    backBtn.disabled = false;
   }
-
-  document.body.appendChild(form);
-  form.submit();
-  form.remove();
-
-  showToast("Başvurun alındı 🎉\n\nENVC Genel WhatsApp grubuna katılmak için yönlendiriliyorsun.", "ok");
-
-  setTimeout(() => {
-    window.location.href = WA_LINK;
-  }, 3000);
-
-  nextBtn.textContent = "Gönderildi";
-      }catch(e){
+}catch(e){
         showToast("Gönderim başarısız. Script deploy erişimini (Anyone) kontrol et.", "bad");
         nextBtn.disabled = false;
         backBtn.disabled = false;
@@ -540,20 +540,20 @@
     };
 
     nextBtn.onclick = async () => {
-      hideToast();
-      clearErrors();
+  hideToast();
+  clearErrors();
 
-      if (step === 1 && !v1()) return;
-      if (step === 2 && !v2()) return;
+  if (step === 1) {
+    if (!v1()) return;
+    step = 2;
+    showStep();
+    return;
+  }
 
-      if (step < 2){
-        step += 1;
-        showStep();
-        return;
-      }
-
-      await submit();
-    };
+  // step === 2
+  if (!v2()) return;
+  await submit();
+};
 
     // init
     renderChips("chips_what", SELECT.what, picked.what);
