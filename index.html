@@ -208,11 +208,10 @@
         <h1 id="title">Seni tanıyalım</h1>
 
         <div class="progressWrap">
-          <div class="segBar">
-            <div class="seg"><div class="fill" id="seg1"></div></div>
-            <div class="seg"><div class="fill" id="seg2"></div></div>
-            <div class="seg"><div class="fill" id="seg3"></div></div>
-          </div>
+         <div class="segBar">
+  <div class="seg"><div class="fill" id="seg1"></div></div>
+  <div class="seg"><div class="fill" id="seg2"></div></div>
+</div>
           <div class="stepCount" id="count">1 / 2</div>
         </div>
 
@@ -239,8 +238,8 @@
           </div>
 
           <div class="field hidden" id="otherSchoolWrap">
-            <label>Okulunu yaz <span class="req">*</span></label>
-            <input id="otherSchool" type="text" placeholder="Örn: ODTÜ, YTÜ, Galatasaray..." />
+            <label>Nerede okuyorsun / nereden mezunsun <span class="req">*</span></label>
+            <input id="otherSchool" type="text" placeholder="Okulunu yaz." />
             <div class="err" id="err_otherSchool"></div>
           </div>
 
@@ -331,7 +330,6 @@
     const countEl = document.getElementById("count");
     const seg1 = document.getElementById("seg1");
     const seg2 = document.getElementById("seg2");
-    const seg3 = document.getElementById("seg3");
     const toast = document.getElementById("toast");
 
     const steps = Array.from(document.querySelectorAll(".step"));
@@ -420,7 +418,6 @@
     function setProgress(){
       seg1.style.width = (step >= 1) ? "100%" : "0%";
       seg2.style.width = (step >= 2) ? "100%" : "0%";
-      seg3.style.width = "0%";
       countEl.textContent = step + " / 2";
     }
 
