@@ -1,119 +1,614 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>ENVC Form</title>
-<style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ENVC – Genel Başvuru</title>
+  <style>
+    :root{
+      --bg0:#030513;
+      --bg1:#05081a;
+      --card:#070a18;
+      --card2:#0b1024;
+      --stroke:rgba(255,255,255,.08);
+      --stroke2:rgba(255,255,255,.10);
+      --text:#e9ecff;
+      --muted:rgba(233,236,255,.65);
+      --muted2:rgba(233,236,255,.45);
+      --primary:#5457ff;
+      --primary2:#7a7bff;
+      --danger:#ff5b6a;
+    }
 
-body{
-font-family: Arial;
-background:#050712;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 50% -200px, rgba(84,87,255,.28), transparent 62%),
+        radial-gradient(900px 650px at 90% 20%, rgba(122,123,255,.18), transparent 58%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+    }
 
-.card{
-background:#070a17;
-padding:30px;
-border-radius:15px;
-width:500px;
-}
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:34px 16px;
+    }
 
-input,select,textarea{
-width:100%;
-padding:10px;
-margin-top:6px;
-margin-bottom:16px;
-border-radius:8px;
-border:none;
-}
+    .panel{
+      width:min(880px, 100%);
+      display:flex;
+      justify-content:center;
+    }
 
-button{
-padding:12px;
-background:#5b5cff;
-border:none;
-border-radius:10px;
-color:white;
-font-weight:bold;
-cursor:pointer;
-}
+    .card{
+      width:min(720px, 100%);
+      border:1px solid var(--stroke);
+      border-radius:18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), transparent 45%),
+        var(--card);
+      box-shadow: 0 30px 90px rgba(0,0,0,.65);
+      padding:26px 22px 20px;
+    }
 
-</style>
+    .mini{
+      text-align:center;
+      font-size:12px;
+      letter-spacing:.22em;
+      color:var(--muted2);
+      text-transform:uppercase;
+      margin-top:2px;
+      margin-bottom:8px;
+    }
+
+    h1{
+      text-align:left;
+      margin:0 0 10px 0;
+      font-size:34px;
+      letter-spacing:-.02em;
+    }
+
+    .info{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.03);
+      border-radius:12px;
+      padding:12px 14px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.4;
+      margin:12px 0 14px;
+    }
+    .info b{color:var(--text)}
+
+    .progressWrap{
+      margin:10px 0 18px;
+    }
+
+    /* Screenshot’taki gibi 3 segmentli bar */
+    .segBar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .seg{
+      height:4px;
+      flex:1;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.06);
+      overflow:hidden;
+    }
+    .seg .fill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--primary), var(--primary2));
+      border-radius:999px;
+      transition:width .18s ease;
+    }
+
+    .stepCount{
+      margin-top:10px;
+      text-align:center;
+      font-size:12px;
+      color:var(--muted2);
+    }
+
+    .step{display:none}
+    .step.active{display:block}
+
+    .field{margin:14px 0}
+    label{
+      display:block;
+      font-weight:700;
+      margin:0 0 8px;
+      color:rgba(233,236,255,.85);
+    }
+    .req{color:var(--danger)}
+
+    input,select,textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid var(--stroke2);
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      background-color: var(--card2);
+      color:var(--text);
+      outline:none;
+    }
+    input::placeholder, textarea::placeholder{color:rgba(233,236,255,.35)}
+    select{cursor:pointer}
+
+    .hint{
+      margin-top:8px;
+      font-size:12px;
+      color:var(--muted2);
+    }
+
+    .err{
+      min-height:16px;
+      margin-top:8px;
+      font-size:12px;
+      color:var(--danger);
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .chip{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.03);
+      color:rgba(233,236,255,.88);
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+      transition:transform .05s ease, background .15s ease, border .15s ease;
+    }
+    .chip:hover{transform:translateY(-1px)}
+    .chip.on{
+      background:rgba(84,87,255,.22);
+      border-color:rgba(84,87,255,.55);
+    }
+
+    .actions{
+      display:flex;
+      gap:14px;
+      margin-top:18px;
+    }
+    .btn{
+      flex:1;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid var(--stroke);
+      font-weight:800;
+      cursor:pointer;
+    }
+    .btn.secondary{
+      background:rgba(255,255,255,.04);
+      color:rgba(233,236,255,.9);
+    }
+    .btn.primary{
+      background: linear-gradient(90deg, var(--primary), var(--primary2));
+      border-color:rgba(84,87,255,.55);
+      color:#0b0e1f;
+    }
+    .btn:disabled{opacity:.45; cursor:not-allowed}
+
+    .toast{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.04);
+      font-size:13px;
+      color:rgba(233,236,255,.9);
+      display:none;
+    }
+    .toast.show{display:block}
+    .toast.ok{border-color:rgba(84,87,255,.6)}
+    .toast.bad{border-color:rgba(255,91,106,.6)}
+
+    .hidden{display:none !important}
+  </style>
 </head>
-
 <body>
+  <div class="wrap">
+    <div class="panel">
+      <div class="card">
+        <div class="mini">ENVC – Pitch Başvurusu</div>
 
-<div class="card">
+        <div class="info">
+          <b>ENVC - Genel</b> grubu herkese açık olup, <b>ENVC - Startup Topluluğu</b> başvuruya tabidir.
+          <br><br>
+          Önümüzdeki dönemde yapılacak olan kapalı VC oturumlarına katılım ve sunum önceliği bu grup üzerinden sağlanacaktır.
+        </div>
 
-<h2>ENVC Genel Başvuru</h2>
+        <h1 id="title">Seni tanıyalım</h1>
 
-<form id="form">
+        <div class="progressWrap">
+          <div class="segBar">
+            <div class="seg"><div class="fill" id="seg1"></div></div>
+            <div class="seg"><div class="fill" id="seg2"></div></div>
+            <div class="seg"><div class="fill" id="seg3"></div></div>
+          </div>
+          <div class="stepCount" id="count">1 / 3</div>
+        </div>
 
-<label>İsim Soyisim</label>
-<input id="name">
+        <!-- STEP 1 -->
+        <section class="step active" data-step="1">
+          <div class="field">
+            <label>İsim Soyisim <span class="req">*</span></label>
+            <input id="name" type="text" placeholder="Ad Soyad" />
+            <div class="err" id="err_name"></div>
+          </div>
 
-<label>Okul</label>
-<select id="school">
-<option>Boğaziçi</option>
-<option>Koç</option>
-<option>İTÜ</option>
-<option>Bilkent</option>
-<option>Sabancı</option>
-<option>Diğer</option>
-</select>
+          <div class="field">
+            <label>Okul <span class="req">*</span></label>
+            <select id="school">
+              <option value="">Seç...</option>
+              <option value="Boğaziçi">Boğaziçi</option>
+              <option value="Koç">Koç</option>
+              <option value="İTÜ">İTÜ</option>
+              <option value="Bilkent">Bilkent</option>
+              <option value="Sabancı">Sabancı</option>
+              <option value="Diğer">Diğer</option>
+            </select>
+            <div class="err" id="err_school"></div>
+          </div>
 
-<label>Bölüm & Sınıf</label>
-<input id="department">
+          <div class="field hidden" id="otherSchoolWrap">
+            <label>Okulunu yaz <span class="req">*</span></label>
+            <input id="otherSchool" type="text" placeholder="Örn: ODTÜ, YTÜ, Galatasaray..." />
+            <div class="err" id="err_otherSchool"></div>
+          </div>
 
-<label>Telefon</label>
-<input id="phone">
+          <div class="field">
+            <label>Bölüm & Sınıf <span class="req">*</span></label>
+            <input id="department" type="text" placeholder="Örn: İşletme, 3. sınıf" />
+            <div class="err" id="err_department"></div>
+          </div>
 
-<label>Email</label>
-<input id="email">
+          <div class="field">
+            <label>Telefon Numarası <span class="req">*</span></label>
+            <input id="phone" type="tel" placeholder="+90 5xx xxx xx xx" />
+            <div class="err" id="err_phone"></div>
+          </div>
 
-<label>LinkedIn</label>
-<input id="linkedin">
+          <div class="field">
+            <label>E-posta <span class="req">*</span></label>
+            <input id="email" type="email" placeholder="ornek@mail.com" />
+            <div class="err" id="err_email"></div>
+          </div>
 
-<label>Instagram</label>
-<input id="instagram">
+          <div class="field">
+            <label>LinkedIn</label>
+            <input id="linkedin" type="url" placeholder="linkedin.com/in/..." />
+          </div>
 
-<button type="submit">Gönder</button>
+          <div class="field">
+            <label>Instagram kullanıcı adı</label>
+            <input id="instagram" type="text" placeholder="@kullaniciadi" />
+          </div>
+        </section>
 
-</form>
+        <!-- STEP 2 -->
+        <section class="step" data-step="2">
+          <h1 style="margin-top:0" class="hidden"></h1>
 
-</div>
+          <div class="field">
+            <label>ENVC’de en çok ne arıyorsun? <span class="req">*</span></label>
+            <div class="chips" id="chips_what"></div>
+            <div class="hint">Birden fazla seçebilirsin.</div>
+            <div class="err" id="err_what"></div>
+          </div>
 
-<script>
+          <div class="field">
+            <label>Şu an kendini en yakın nerede görüyorsun? <span class="req">*</span></label>
+            <select id="stage">
+              <option value="">Seç...</option>
+              <option value="Yeni başlıyorum, keşif modundayım">Yeni başlıyorum, keşif modundayım</option>
+              <option value="Bir fikrim var ama çok erken aşamada">Bir fikrim var ama çok erken aşamada</option>
+              <option value="MVP geliştiriyorum">MVP geliştiriyorum</option>
+              <option value="Bir startup’ta aktif çalışıyorum">Bir startup’ta aktif çalışıyorum</option>
+              <option value="Founder / co-founder’ım">Founder / co-founder’ım</option>
+              <option value="VC / yatırım tarafına ilgim var">VC / yatırım tarafına ilgim var</option>
+              <option value="Diğer">Diğer</option>
+            </select>
+            <div class="err" id="err_stage"></div>
+          </div>
 
-const url="https://script.google.com/macros/s/AKfycbwJSmUtf6FJOwYurjdeDBAb22oNdNSg4iLvx8UN7x8zOwkVHxnKzI-CDHGQf7CfgwZ6/exec";
+          <div class="field">
+            <label>İlgilendiğin alanlar <span class="req">*</span></label>
+            <div class="chips" id="chips_sectors"></div>
+            <div class="hint">Birden fazla seçebilirsin.</div>
+            <div class="err" id="err_sectors"></div>
+          </div>
+        </section>
 
-document.getElementById("form").addEventListener("submit", async function(e){
+        <!-- STEP 3 -->
+        <section class="step" data-step="3">
+          <div class="field">
+            <label>Girişimcilik veya VC ile ilgin nereden geliyor? <span class="req">*</span></label>
+            <textarea id="interestOrigin" rows="5" placeholder="Ne ilgini çekiyor? Ne öğrenmek veya kurmak istiyorsun?"></textarea>
+            <div class="err" id="err_interestOrigin"></div>
+          </div>
 
-e.preventDefault();
+          <div class="field">
+            <label>Önümüzdeki 3 ay içinde ne yapmak istiyorsun? <span class="req">*</span></label>
+            <div class="chips" id="chips_next"></div>
+            <div class="hint">Birden fazla seçebilirsin.</div>
+            <div class="err" id="err_next"></div>
+          </div>
 
-const data={
-name:document.getElementById("name").value,
-school:document.getElementById("school").value,
-department:document.getElementById("department").value,
-phone:document.getElementById("phone").value,
-email:document.getElementById("email").value,
-linkedin:document.getElementById("linkedin").value,
-instagram:document.getElementById("instagram").value
-};
+          <div class="field">
+            <label>Eklemek istediğin bir şey?</label>
+            <textarea id="extra" rows="4" placeholder="Serbest alan..."></textarea>
+          </div>
+        </section>
 
-await fetch(url,{
-method:"POST",
-body:JSON.stringify(data)
-});
+        <div class="actions">
+          <button class="btn secondary" id="back" disabled>Geri</button>
+          <button class="btn primary" id="next">Devam</button>
+        </div>
 
-alert("Gönderildi");
+        <div class="toast" id="toast"></div>
+      </div>
+    </div>
+  </div>
 
-});
+  <script>
+    // Google Apps Script endpoint (senin verdiğin)
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJSmUtf6FJOwYurjdeDBAb22oNdNSg4iLvx8UN7x8zOwkVHxnKzI-CDHGQf7CfgwZ6/exec";
 
-</script>
+    const titleEl = document.getElementById("title");
+    const countEl = document.getElementById("count");
+    const seg1 = document.getElementById("seg1");
+    const seg2 = document.getElementById("seg2");
+    const seg3 = document.getElementById("seg3");
+    const toast = document.getElementById("toast");
 
+    const steps = Array.from(document.querySelectorAll(".step"));
+    const backBtn = document.getElementById("back");
+    const nextBtn = document.getElementById("next");
+
+    const schoolEl = document.getElementById("school");
+    const otherSchoolWrap = document.getElementById("otherSchoolWrap");
+    const otherSchoolEl = document.getElementById("otherSchool");
+
+    const SELECT = {
+      what: [
+        "Networking",
+        "Startup fikirleri ve ekip bulma",
+        "VC / yatırım dünyasını öğrenme",
+        "Event duyuruları (talk, workshop, demo day)",
+        "Staj / iş fırsatları (startup ekosistemi)",
+        "Mentor / feedback",
+        "Pitch pratiği",
+        "Sadece ortamı takip etmek",
+      ],
+      sectors: [
+        "AI / ML",
+        "SaaS / B2B",
+        "Consumer / B2C",
+        "Fintech",
+        "Gaming",
+        "HealthTech",
+        "EdTech",
+        "Climate / Sustainability",
+        "Marketplace / E-commerce",
+        "Devtools / Deep Tech",
+        "Diğer",
+      ],
+      next: [
+        "Etkinliklere katılmak",
+        "İnsan tanımak ve network kurmak",
+        "Bir fikir üzerinde çalışmak",
+        "Ekip bulmak / ekibe girmek",
+        "Pitch deck hazırlamak veya pitch pratiği yapmak",
+        "VC101 tarzı içeriklerle öğrenmek",
+        "Sadece takip etmek",
+      ],
+    };
+
+    const picked = {
+      what: new Set(),
+      sectors: new Set(),
+      next: new Set(),
+    };
+
+    let step = 1;
+
+    function setErr(id, msg){
+      const el = document.getElementById("err_" + id);
+      if (el) el.textContent = msg || "";
+    }
+    function clearErrors(){
+      ["name","school","otherSchool","department","phone","email","what","stage","sectors","interestOrigin","next"]
+        .forEach(k => setErr(k,""));
+    }
+
+    function showToast(msg, type){
+      toast.textContent = msg;
+      toast.className = "toast show " + (type || "");
+    }
+    function hideToast(){
+      toast.className = "toast";
+      toast.textContent = "";
+    }
+
+    function renderChips(containerId, labels, setRef){
+      const c = document.getElementById(containerId);
+      c.innerHTML = "";
+      labels.forEach(l => {
+        const d = document.createElement("div");
+        d.className = "chip";
+        d.textContent = l;
+        d.onclick = () => {
+          if (setRef.has(l)) setRef.delete(l);
+          else setRef.add(l);
+          d.classList.toggle("on", setRef.has(l));
+        };
+        c.appendChild(d);
+      });
+    }
+
+    function schoolToggle(){
+      if (schoolEl.value === "Diğer") otherSchoolWrap.classList.remove("hidden");
+      else otherSchoolWrap.classList.add("hidden");
+    }
+    schoolEl.addEventListener("change", schoolToggle);
+
+    function setProgress(){
+      // Screenshot mantığı: aktif step segmenti dolu, geçmiş dolu, gelecek boş
+      seg1.style.width = (step >= 1) ? "100%" : "0%";
+      seg2.style.width = (step >= 2) ? "100%" : "0%";
+      seg3.style.width = (step >= 3) ? "100%" : "0%";
+      countEl.textContent = step + " / 3";
+    }
+
+    function setTitle(){
+      if (step === 1) titleEl.textContent = "Seni tanıyalım";
+      if (step === 2) titleEl.textContent = "Startup & İlgi Alanları";
+      if (step === 3) titleEl.textContent = "Motivasyon";
+    }
+
+    function showStep(){
+      steps.forEach(s => s.classList.remove("active"));
+      document.querySelector('.step[data-step="' + step + '"]').classList.add("active");
+      backBtn.disabled = (step === 1);
+      nextBtn.textContent = (step === 3) ? "Gönder" : "Devam";
+      setTitle();
+      setProgress();
+    }
+
+    function isEmailValid(email){
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function v1(){
+      let ok = true;
+      const name = document.getElementById("name").value.trim();
+      const school = schoolEl.value.trim();
+      const otherSchool = otherSchoolEl.value.trim();
+      const department = document.getElementById("department").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+
+      if (!name){ setErr("name","Burası boş kalamaz."); ok=false; }
+      if (!school){ setErr("school","Okul seç."); ok=false; }
+      if (school === "Diğer" && !otherSchool){ setErr("otherSchool","Okul adını yaz."); ok=false; }
+      if (!department){ setErr("department","Burası boş kalamaz."); ok=false; }
+      if (!phone){ setErr("phone","WhatsApp için telefon şart."); ok=false; }
+      if (!email){ setErr("email","Burası boş kalamaz."); ok=false; }
+      if (email && !isEmailValid(email)){ setErr("email","Geçerli bir e-posta yaz."); ok=false; }
+
+      return ok;
+    }
+
+    function v2(){
+      let ok = true;
+      if (picked.what.size === 0){ setErr("what","En az 1 seçim yap."); ok=false; }
+      const stage = document.getElementById("stage").value.trim();
+      if (!stage){ setErr("stage","Bir seçenek seç."); ok=false; }
+      if (picked.sectors.size === 0){ setErr("sectors","En az 1 seçim yap."); ok=false; }
+      return ok;
+    }
+
+    function v3(){
+      let ok = true;
+      const interestOrigin = document.getElementById("interestOrigin").value.trim();
+      if (!interestOrigin){ setErr("interestOrigin","Burası boş kalamaz."); ok=false; }
+      if (picked.next.size === 0){ setErr("next","En az 1 seçim yap."); ok=false; }
+      return ok;
+    }
+
+    function payload(){
+      const school = schoolEl.value.trim();
+      return {
+        name: document.getElementById("name").value.trim(),
+        school,
+        otherSchool: (school === "Diğer") ? otherSchoolEl.value.trim() : "",
+        department: document.getElementById("department").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        linkedin: document.getElementById("linkedin").value.trim(),
+        instagram: document.getElementById("instagram").value.trim(),
+        whatLookingFor: Array.from(picked.what),
+        currentStage: document.getElementById("stage").value.trim(),
+        sectors: Array.from(picked.sectors),
+        interestOrigin: document.getElementById("interestOrigin").value.trim(),
+        next3Months: Array.from(picked.next),
+        extra: document.getElementById("extra").value.trim(),
+      };
+    }
+
+    async function submit(){
+      nextBtn.disabled = true;
+      backBtn.disabled = true;
+      showToast("Gönderiliyor...", "ok");
+
+      try{
+        // Google Apps Script CORS yüzünden response okuyamayabilirsin. no-cors ile gönderiyoruz.
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify(payload()),
+        });
+
+        showToast("Başvurun alındı 🎉\n\nENVC Genel WhatsApp grubuna katılmak için yönlendiriliyorsun.", "ok");
+
+setTimeout(() => {
+  window.location.href = "https://chat.whatsapp.com/K7KDdBy9mgn0NK8HxYq8x7";
+}, 3000);
+        nextBtn.textContent = "Gönderildi";
+      }catch(e){
+        showToast("Gönderim başarısız. Script deploy erişimini (Anyone) kontrol et.", "bad");
+        nextBtn.disabled = false;
+        backBtn.disabled = false;
+      }
+    }
+
+    backBtn.onclick = () => {
+      hideToast();
+      clearErrors();
+      step = Math.max(1, step - 1);
+      showStep();
+    };
+
+    nextBtn.onclick = async () => {
+      hideToast();
+      clearErrors();
+
+      if (step === 1 && !v1()) return;
+      if (step === 2 && !v2()) return;
+
+      if (step < 3){
+        step += 1;
+        showStep();
+        return;
+      }
+
+      if (!v3()) return;
+      await submit();
+    };
+
+    // init
+    renderChips("chips_what", SELECT.what, picked.what);
+    renderChips("chips_sectors", SELECT.sectors, picked.sectors);
+    renderChips("chips_next", SELECT.next, picked.next);
+
+    schoolToggle();
+    showStep();
+  </script>
 </body>
 </html>
