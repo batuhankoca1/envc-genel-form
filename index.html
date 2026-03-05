@@ -495,12 +495,21 @@
       showToast("Gönderiliyor...", "ok");
 
       try{
-        await fetch(SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type":"application/json" },
-          body: JSON.stringify(payload()),
-        });
+      const p = payload();
+const params = new URLSearchParams();
+
+// array’leri stringe çevir
+for (const [k, v] of Object.entries(p)) {
+  if (Array.isArray(v)) params.append(k, v.join(", "));
+  else params.append(k, String(v ?? ""));
+}
+
+await fetch(SCRIPT_URL, {
+  method: "POST",
+  mode: "no-cors",
+  headers: { "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8" },
+  body: params.toString(),
+});
 
         showToast("Başvurun alındı 🎉\n\nENVC Genel WhatsApp grubuna katılmak için yönlendiriliyorsun.", "ok");
 
