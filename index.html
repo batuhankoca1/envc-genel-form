@@ -489,35 +489,43 @@
       };
     }
 
-    async function submit(){
-      nextBtn.disabled = true;
-      backBtn.disabled = true;
-      showToast("Gönderiliyor...", "ok");
+   function submit(){
+  nextBtn.disabled = true;
+  backBtn.disabled = true;
+  showToast("Gönderiliyor...", "ok");
 
-      try{
-      const p = payload();
-const params = new URLSearchParams();
+  // payload objesi
+  const p = payload();
 
-// array’leri stringe çevir
-for (const [k, v] of Object.entries(p)) {
-  if (Array.isArray(v)) params.append(k, v.join(", "));
-  else params.append(k, String(v ?? ""));
-}
+  // hidden form yarat
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = SCRIPT_URL;
+  form.target = "hidden_iframe";
 
-await fetch(SCRIPT_URL, {
-  method: "POST",
-  mode: "no-cors",
-  headers: { "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8" },
-  body: params.toString(),
-});
+  // objeyi inputlara çevir
+  for (const [k, v] of Object.entries(p)) {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = k;
 
-        showToast("Başvurun alındı 🎉\n\nENVC Genel WhatsApp grubuna katılmak için yönlendiriliyorsun.", "ok");
+    if (Array.isArray(v)) input.value = v.join(", ");
+    else input.value = String(v ?? "");
 
-        setTimeout(() => {
-          window.location.href = WA_LINK;
-        }, 3000);
+    form.appendChild(input);
+  }
 
-        nextBtn.textContent = "Gönderildi";
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
+
+  showToast("Başvurun alındı 🎉\n\nENVC Genel WhatsApp grubuna katılmak için yönlendiriliyorsun.", "ok");
+
+  setTimeout(() => {
+    window.location.href = WA_LINK;
+  }, 3000);
+
+  nextBtn.textContent = "Gönderildi";
       }catch(e){
         showToast("Gönderim başarısız. Script deploy erişimini (Anyone) kontrol et.", "bad");
         nextBtn.disabled = false;
@@ -555,5 +563,6 @@ await fetch(SCRIPT_URL, {
     schoolToggle();
     showStep();
   </script>
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
 </body>
 </html>
