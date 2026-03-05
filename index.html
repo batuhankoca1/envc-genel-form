@@ -295,9 +295,12 @@
           </div>
 
           <div class="field">
-            <label>Instagram kullanıcı adı</label>
-            <input id="instagram" type="text" placeholder="@kullaniciadi" />
-          </div>
+  <label>Instagram kullanıcı adı</label>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="padding:12px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:#0b1024;color:rgba(233,236,255,.55);font-weight:800;line-height:1">@</div>
+    <input id="instagram" type="text" placeholder="kullaniciadi" style="flex:1" />
+  </div>
+</div>
         </section>
 
         <!-- STEP 2 -->
@@ -332,40 +335,13 @@
             <div class="hint">Birden fazla seçebilirsin.</div>
             <div class="err" id="err_sectors"></div>
           </div>
+          <div class="field">
+  <label>Girişimcilik veya VC ile ilgin nereden geliyor? / Eklemek istediğin bir şey var mı? <span style="font-weight:600;color:rgba(233,236,255,.55)">(opsiyonel)</span></label>
+  <textarea id="note" rows="4" placeholder="Kısaca yazabilirsin..."></textarea>
+</div>
         </section>
 
-        <!-- STEP 3 -->
-        <section class="step" data-step="3">
-          <div class="field">
-            <label>Girişimcilik veya VC ile ilgin nereden geliyor? <span class="req">*</span></label>
-            <textarea id="interestOrigin" rows="5" placeholder="Ne ilgini çekiyor? Ne öğrenmek veya kurmak istiyorsun?"></textarea>
-            <div class="err" id="err_interestOrigin"></div>
-          </div>
-
-          <div class="field">
-            <label>Önümüzdeki 3 ay içinde ne yapmak istiyorsun? <span class="req">*</span></label>
-            <div class="chips" id="chips_next"></div>
-            <div class="hint">Birden fazla seçebilirsin.</div>
-            <div class="err" id="err_next"></div>
-          </div>
-
-          <div class="field">
-            <label>Eklemek istediğin bir şey?</label>
-            <textarea id="extra" rows="4" placeholder="Serbest alan..."></textarea>
-          </div>
-        </section>
-
-        <div class="actions">
-          <button class="btn secondary" id="back" disabled>Geri</button>
-          <button class="btn primary" id="next">Devam</button>
-        </div>
-
-        <div class="toast" id="toast"></div>
-      </div>
-    </div>
-  </div>
-
-  <script>
+       
     // Google Apps Script endpoint (senin verdiğin)
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJSmUtf6FJOwYurjdeDBAb22oNdNSg4iLvx8UN7x8zOwkVHxnKzI-CDHGQf7CfgwZ6/exec";
 
@@ -385,16 +361,18 @@
     const otherSchoolEl = document.getElementById("otherSchool");
 
     const SELECT = {
-      what: [
-        "Networking",
-        "Startup fikirleri ve ekip bulma",
-        "VC / yatırım dünyasını öğrenme",
-        "Event duyuruları (talk, workshop, demo day)",
-        "Staj / iş fırsatları (startup ekosistemi)",
-        "Mentor / feedback",
-        "Pitch pratiği",
-        "Sadece ortamı takip etmek",
-      ],
+     what: [
+  "Networking",
+  "Startup fikirleri ve ekip bulma",
+  "VC / yatırım dünyasını öğrenme",
+  "VC’lerle görüşerek yatırım bulma",
+  "Ar-ge kaynakları / çalışma alanı",
+  "Event duyuruları (talk, workshop, demo day)",
+  "Staj / iş fırsatları (startup ekosistemi)",
+  "Mentor",
+  "Pitch pratiği",
+  "Sadece ortamı takip etmek",
+],
       sectors: [
         "AI / ML",
         "SaaS / B2B",
@@ -467,25 +445,23 @@
     }
     schoolEl.addEventListener("change", schoolToggle);
 
-    function setProgress(){
-      // Screenshot mantığı: aktif step segmenti dolu, geçmiş dolu, gelecek boş
-      seg1.style.width = (step >= 1) ? "100%" : "0%";
-      seg2.style.width = (step >= 2) ? "100%" : "0%";
-      seg3.style.width = (step >= 3) ? "100%" : "0%";
-      countEl.textContent = step + " / 3";
-    }
+   function setProgress(){
+  seg1.style.width = (step >= 1) ? "100%" : "0%";
+  seg2.style.width = (step >= 2) ? "100%" : "0%";
+  seg3.style.width = "0%";
+  countEl.textContent = step + " / 2";
+}
 
     function setTitle(){
       if (step === 1) titleEl.textContent = "Seni tanıyalım";
       if (step === 2) titleEl.textContent = "Startup & İlgi Alanları";
-      if (step === 3) titleEl.textContent = "Motivasyon";
     }
 
     function showStep(){
       steps.forEach(s => s.classList.remove("active"));
       document.querySelector('.step[data-step="' + step + '"]').classList.add("active");
       backBtn.disabled = (step === 1);
-      nextBtn.textContent = (step === 3) ? "Gönder" : "Devam";
+      nextBtn.textContent = (step === 2) ? "Gönder" : "Devam";
       setTitle();
       setProgress();
     }
@@ -532,24 +508,25 @@
     }
 
     function payload(){
-      const school = schoolEl.value.trim();
-      return {
-        name: document.getElementById("name").value.trim(),
-        school,
-        otherSchool: (school === "Diğer") ? otherSchoolEl.value.trim() : "",
-        department: document.getElementById("department").value.trim(),
-        phone: document.getElementById("phone").value.trim(),
-        email: document.getElementById("email").value.trim(),
-        linkedin: document.getElementById("linkedin").value.trim(),
-        instagram: document.getElementById("instagram").value.trim(),
-        whatLookingFor: Array.from(picked.what),
-        currentStage: document.getElementById("stage").value.trim(),
-        sectors: Array.from(picked.sectors),
-        interestOrigin: document.getElementById("interestOrigin").value.trim(),
-        next3Months: Array.from(picked.next),
-        extra: document.getElementById("extra").value.trim(),
-      };
-    }
+  const school = schoolEl.value.trim();
+  const igRaw = document.getElementById("instagram").value.trim();
+  const instagram = igRaw ? ("@" + igRaw.replace(/^@+/, "")) : "";
+
+  return {
+    name: document.getElementById("name").value.trim(),
+    school,
+    otherSchool: (school === "Diğer") ? otherSchoolEl.value.trim() : "",
+    department: document.getElementById("department").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    linkedin: document.getElementById("linkedin").value.trim(),
+    instagram,
+    whatLookingFor: Array.from(picked.what),
+    currentStage: document.getElementById("stage").value.trim(),
+    sectors: Array.from(picked.sectors),
+    note: document.getElementById("note").value.trim(),
+  };
+}
 
     async function submit(){
       nextBtn.disabled = true;
@@ -586,26 +563,24 @@ setTimeout(() => {
     };
 
     nextBtn.onclick = async () => {
-      hideToast();
-      clearErrors();
+  hideToast();
+  clearErrors();
 
-      if (step === 1 && !v1()) return;
-      if (step === 2 && !v2()) return;
+  if (step === 1 && !v1()) return;
+  if (step === 2 && !v2()) return;
 
-      if (step < 3){
-        step += 1;
-        showStep();
-        return;
-      }
+  if (step < 2){
+    step += 1;
+    showStep();
+    return;
+  }
 
-      if (!v3()) return;
-      await submit();
-    };
+  await submit();
+};
 
     // init
     renderChips("chips_what", SELECT.what, picked.what);
     renderChips("chips_sectors", SELECT.sectors, picked.sectors);
-    renderChips("chips_next", SELECT.next, picked.next);
 
     schoolToggle();
     showStep();
