@@ -39,13 +39,11 @@
       justify-content:center;
       padding:34px 16px;
     }
-
     .panel{
       width:min(880px, 100%);
       display:flex;
       justify-content:center;
     }
-
     .card{
       width:min(720px, 100%);
       border:1px solid var(--stroke);
@@ -86,16 +84,8 @@
     }
     .info b{color:var(--text)}
 
-    .progressWrap{
-      margin:10px 0 18px;
-    }
-
-    /* Screenshot’taki gibi 3 segmentli bar */
-    .segBar{
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
+    .progressWrap{ margin:10px 0 18px; }
+    .segBar{ display:flex; gap:10px; align-items:center; }
     .seg{
       height:4px;
       flex:1;
@@ -111,7 +101,6 @@
       border-radius:999px;
       transition:width .18s ease;
     }
-
     .stepCount{
       margin-top:10px;
       text-align:center;
@@ -144,24 +133,10 @@
     input::placeholder, textarea::placeholder{color:rgba(233,236,255,.35)}
     select{cursor:pointer}
 
-    .hint{
-      margin-top:8px;
-      font-size:12px;
-      color:var(--muted2);
-    }
+    .hint{ margin-top:8px; font-size:12px; color:var(--muted2); }
+    .err{ min-height:16px; margin-top:8px; font-size:12px; color:var(--danger); }
 
-    .err{
-      min-height:16px;
-      margin-top:8px;
-      font-size:12px;
-      color:var(--danger);
-    }
-
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
+    .chips{ display:flex; flex-wrap:wrap; gap:10px; }
     .chip{
       padding:10px 12px;
       border-radius:999px;
@@ -179,11 +154,7 @@
       border-color:rgba(84,87,255,.55);
     }
 
-    .actions{
-      display:flex;
-      gap:14px;
-      margin-top:18px;
-    }
+    .actions{ display:flex; gap:14px; margin-top:18px; }
     .btn{
       flex:1;
       padding:12px 14px;
@@ -212,24 +183,26 @@
       font-size:13px;
       color:rgba(233,236,255,.9);
       display:none;
+      white-space:pre-line;
     }
     .toast.show{display:block}
     .toast.ok{border-color:rgba(84,87,255,.6)}
     .toast.bad{border-color:rgba(255,91,106,.6)}
-
     .hidden{display:none !important}
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <div class="panel">
       <div class="card">
-        <div class="mini">ENVC – Pitch Başvurusu</div>
+        <div class="mini">ENVC – Genel Başvuru</div>
 
         <div class="info">
-          Önümüzdeki dönemde yapılacak olan tüm etkinlikler <b>ENVC - Genel</b> gurubunda duyurulacaktır.
+          Önümüzdeki dönemde yapılacak olan tüm etkinlikler <b>ENVC - Genel</b> grubunda duyurulacaktır.
           <br><br>
-          <b>ENVC - Genel</b> grubu herkese açık olup, <b>ENVC - Startup</b> grubu başvuruya tabidir. Başvuru formuna genel gruptan veya ENVC sosyal medya hesaplarından ulaşabilirsin.
+          <b>ENVC - Genel</b> grubu herkese açık olup, <b>ENVC - Startup</b> grubu başvuruya tabidir.
+          Başvuru formuna genel gruptan veya ENVC sosyal medya hesaplarından ulaşabilirsin.
         </div>
 
         <h1 id="title">Seni tanıyalım</h1>
@@ -240,7 +213,7 @@
             <div class="seg"><div class="fill" id="seg2"></div></div>
             <div class="seg"><div class="fill" id="seg3"></div></div>
           </div>
-          <div class="stepCount" id="count">1 / 3</div>
+          <div class="stepCount" id="count">1 / 2</div>
         </div>
 
         <!-- STEP 1 -->
@@ -295,18 +268,16 @@
           </div>
 
           <div class="field">
-  <label>Instagram kullanıcı adı</label>
-  <div style="display:flex;align-items:center;gap:10px">
-    <div style="padding:12px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:#0b1024;color:rgba(233,236,255,.55);font-weight:800;line-height:1">@</div>
-    <input id="instagram" type="text" placeholder="kullaniciadi" style="flex:1" />
-  </div>
-</div>
+            <label>Instagram kullanıcı adı</label>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="padding:12px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:#0b1024;color:rgba(233,236,255,.55);font-weight:800;line-height:1">@</div>
+              <input id="instagram" type="text" placeholder="kullaniciadi" style="flex:1" />
+            </div>
+          </div>
         </section>
 
         <!-- STEP 2 -->
         <section class="step" data-step="2">
-          <h1 style="margin-top:0" class="hidden"></h1>
-
           <div class="field">
             <label>ENVC’de en çok ne arıyorsun? <span class="req">*</span></label>
             <div class="chips" id="chips_what"></div>
@@ -335,15 +306,26 @@
             <div class="hint">Birden fazla seçebilirsin.</div>
             <div class="err" id="err_sectors"></div>
           </div>
+
           <div class="field">
-  <label>Girişimcilik veya VC ile ilgin nereden geliyor? / Eklemek istediğin bir şey var mı? <span style="font-weight:600;color:rgba(233,236,255,.55)">(opsiyonel)</span></label>
-  <textarea id="note" rows="4" placeholder="Kısaca yazabilirsin..."></textarea>
-</div>
+            <label>Girişimcilik veya VC ile ilgin nereden geliyor? / Eklemek istediğin bir şey var mı? <span style="font-weight:600;color:rgba(233,236,255,.55)">(opsiyonel)</span></label>
+            <textarea id="note" rows="4" placeholder="Kısaca yazabilirsin..."></textarea>
+          </div>
         </section>
 
-       
-    // Google Apps Script endpoint (senin verdiğin)
+        <div class="actions">
+          <button class="btn secondary" id="back" disabled>Geri</button>
+          <button class="btn primary" id="next">Devam</button>
+        </div>
+
+        <div class="toast" id="toast"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJSmUtf6FJOwYurjdeDBAb22oNdNSg4iLvx8UN7x8zOwkVHxnKzI-CDHGQf7CfgwZ6/exec";
+    const WA_LINK = "https://chat.whatsapp.com/K7KDdBy9mgn0NK8HxYq8x7";
 
     const titleEl = document.getElementById("title");
     const countEl = document.getElementById("count");
@@ -361,18 +343,18 @@
     const otherSchoolEl = document.getElementById("otherSchool");
 
     const SELECT = {
-     what: [
-  "Networking",
-  "Startup fikirleri ve ekip bulma",
-  "VC / yatırım dünyasını öğrenme",
-  "VC’lerle görüşerek yatırım bulma",
-  "Ar-ge kaynakları / çalışma alanı",
-  "Event duyuruları (talk, workshop, demo day)",
-  "Staj / iş fırsatları (startup ekosistemi)",
-  "Mentor",
-  "Pitch pratiği",
-  "Sadece ortamı takip etmek",
-],
+      what: [
+        "Networking",
+        "Startup fikirleri ve ekip bulma",
+        "VC / yatırım dünyasını öğrenme",
+        "VC’ler ile görüşmeler yaparak girişimim için yatırım bulmak",
+        "Projemi hızlandıracak alan, kaynak, insan bulmak",
+        "Event duyuruları (talk, workshop, demo day)",
+        "Staj / iş fırsatları (startup ekosistemi)",
+        "Mentor / feedback",
+        "Pitch pratiği",
+        "Sadece ortamı takip etmek",
+      ],
       sectors: [
         "AI / ML",
         "SaaS / B2B",
@@ -386,21 +368,11 @@
         "Devtools / Deep Tech",
         "Diğer",
       ],
-      next: [
-        "Etkinliklere katılmak",
-        "İnsan tanımak ve network kurmak",
-        "Bir fikir üzerinde çalışmak",
-        "Ekip bulmak / ekibe girmek",
-        "Pitch deck hazırlamak veya pitch pratiği yapmak",
-        "VC101 tarzı içeriklerle öğrenmek",
-        "Sadece takip etmek",
-      ],
     };
 
     const picked = {
       what: new Set(),
       sectors: new Set(),
-      next: new Set(),
     };
 
     let step = 1;
@@ -410,7 +382,7 @@
       if (el) el.textContent = msg || "";
     }
     function clearErrors(){
-      ["name","school","otherSchool","department","phone","email","what","stage","sectors","interestOrigin","next"]
+      ["name","school","otherSchool","department","phone","email","what","stage","sectors"]
         .forEach(k => setErr(k,""));
     }
 
@@ -445,12 +417,12 @@
     }
     schoolEl.addEventListener("change", schoolToggle);
 
-   function setProgress(){
-  seg1.style.width = (step >= 1) ? "100%" : "0%";
-  seg2.style.width = (step >= 2) ? "100%" : "0%";
-  seg3.style.width = "0%";
-  countEl.textContent = step + " / 2";
-}
+    function setProgress(){
+      seg1.style.width = (step >= 1) ? "100%" : "0%";
+      seg2.style.width = (step >= 2) ? "100%" : "0%";
+      seg3.style.width = "0%";
+      countEl.textContent = step + " / 2";
+    }
 
     function setTitle(){
       if (step === 1) titleEl.textContent = "Seni tanıyalım";
@@ -499,34 +471,26 @@
       return ok;
     }
 
-    function v3(){
-      let ok = true;
-      const interestOrigin = document.getElementById("interestOrigin").value.trim();
-      if (!interestOrigin){ setErr("interestOrigin","Burası boş kalamaz."); ok=false; }
-      if (picked.next.size === 0){ setErr("next","En az 1 seçim yap."); ok=false; }
-      return ok;
-    }
-
     function payload(){
-  const school = schoolEl.value.trim();
-  const igRaw = document.getElementById("instagram").value.trim();
-  const instagram = igRaw ? ("@" + igRaw.replace(/^@+/, "")) : "";
+      const school = schoolEl.value.trim();
+      const igRaw = document.getElementById("instagram").value.trim();
+      const instagram = igRaw ? ("@" + igRaw.replace(/^@+/, "")) : "";
 
-  return {
-    name: document.getElementById("name").value.trim(),
-    school,
-    otherSchool: (school === "Diğer") ? otherSchoolEl.value.trim() : "",
-    department: document.getElementById("department").value.trim(),
-    phone: document.getElementById("phone").value.trim(),
-    email: document.getElementById("email").value.trim(),
-    linkedin: document.getElementById("linkedin").value.trim(),
-    instagram,
-    whatLookingFor: Array.from(picked.what),
-    currentStage: document.getElementById("stage").value.trim(),
-    sectors: Array.from(picked.sectors),
-    note: document.getElementById("note").value.trim(),
-  };
-}
+      return {
+        name: document.getElementById("name").value.trim(),
+        school,
+        otherSchool: (school === "Diğer") ? otherSchoolEl.value.trim() : "",
+        department: document.getElementById("department").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        linkedin: document.getElementById("linkedin").value.trim(),
+        instagram,
+        whatLookingFor: Array.from(picked.what),
+        currentStage: document.getElementById("stage").value.trim(),
+        sectors: Array.from(picked.sectors),
+        note: document.getElementById("note").value.trim(),
+      };
+    }
 
     async function submit(){
       nextBtn.disabled = true;
@@ -534,7 +498,6 @@
       showToast("Gönderiliyor...", "ok");
 
       try{
-        // Google Apps Script CORS yüzünden response okuyamayabilirsin. no-cors ile gönderiyoruz.
         await fetch(SCRIPT_URL, {
           method: "POST",
           mode: "no-cors",
@@ -544,9 +507,10 @@
 
         showToast("Başvurun alındı 🎉\n\nENVC Genel WhatsApp grubuna katılmak için yönlendiriliyorsun.", "ok");
 
-setTimeout(() => {
-  window.location.href = "https://chat.whatsapp.com/K7KDdBy9mgn0NK8HxYq8x7";
-}, 3000);
+        setTimeout(() => {
+          window.location.href = WA_LINK;
+        }, 3000);
+
         nextBtn.textContent = "Gönderildi";
       }catch(e){
         showToast("Gönderim başarısız. Script deploy erişimini (Anyone) kontrol et.", "bad");
@@ -563,20 +527,20 @@ setTimeout(() => {
     };
 
     nextBtn.onclick = async () => {
-  hideToast();
-  clearErrors();
+      hideToast();
+      clearErrors();
 
-  if (step === 1 && !v1()) return;
-  if (step === 2 && !v2()) return;
+      if (step === 1 && !v1()) return;
+      if (step === 2 && !v2()) return;
 
-  if (step < 2){
-    step += 1;
-    showStep();
-    return;
-  }
+      if (step < 2){
+        step += 1;
+        showStep();
+        return;
+      }
 
-  await submit();
-};
+      await submit();
+    };
 
     // init
     renderChips("chips_what", SELECT.what, picked.what);
